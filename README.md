@@ -19,11 +19,11 @@ The Adcash SDK is available via:
 The Adcash SDK is uploaded to **JCenter** for your convenience. So you should setup your project to sync to the JCenter repository to allow it to download the Adcash SDK from there.  
 In your project base `build.gradle` file add:
 
-[xml]
+```xml
 repositories {
     jcenter()
 }
-[/xml]
+```
 <a href="http://developer.adca.sh/wp-content/uploads/2015/12/integration_with_gradle_start.png"><img src="http://developer.adca.sh/wp-content/uploads/2015/12/integration_with_gradle_start-300x188.png" alt="integration_with_gradle_start" width="300" height="188" class="aligncenter size-medium wp-image-835" /></a>
 
 When you sync you should now have successfully prepared your project to download from JCenter.  
@@ -32,7 +32,7 @@ When you sync you should now have successfully prepared your project to download
 Then simply include the **Adcash SDK** to your project dependencies. Make sure to also include the two library dependencies used and needed by the Adcash SDK - **Google Play Services** and **Android Support Library v4**.  
 Add the following lines to your module based `build.gradle` file:
 
-[xml]
+```xml
 dependencies {
     // Integrate Adcash SDK:
     compile 'com.adcash:adcash-mopub-adapter:1.0.0'
@@ -41,7 +41,7 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.0'
     compile 'com.google.android.gms:play-services:9.4.0'
 }
-[/xml]
+```
 
 <a href="http://developer.adca.sh/wp-content/uploads/2015/12/integration_with_gradle.png"><img src="http://developer.adca.sh/wp-content/uploads/2015/12/integration_with_gradle-300x188.png" alt="integration_with_gradle" width="300" height="188" class="aligncenter size-medium wp-image-833" /></a>
 
@@ -55,7 +55,7 @@ Add Adcash SDK into project by putting it in **'libs'** module.  If you don't ha
 
 Open the build.gradle of your app and add the following code lines:
 
-[xml]
+```xml
 repositories {
     flatDir {
        dirs 'libs'
@@ -70,7 +70,7 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.+'
     compile 'com.google.android.gms:play-services-ads:9.2.+'
 }
-[/xml]
+```
 <a href="http://developer.adca.sh/wp-content/uploads/2016/09/gradle_sync.png"><img src="http://developer.adca.sh/wp-content/uploads/2016/09/gradle_sync-300x207.png" alt="gradle_sync" width="300" height="207" class="aligncenter size-medium wp-image-1102" /></a>
 ### 2. Update AndroidManifest.xml
 ```xml
