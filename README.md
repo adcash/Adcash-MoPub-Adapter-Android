@@ -35,7 +35,7 @@ Add the following lines to your module based `build.gradle` file:
 ```xml
 dependencies {
     // Integrate Adcash SDK:
-    compile 'com.adcash:adcash-mopub-adapter:1.0.0'
+    compile 'com.adcash:adcash-mopub-adapter:2.2.1'
 
     // Required by Adcash SDK:
     compile 'com.android.support:support-v4:24.2.0'
