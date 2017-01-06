@@ -1,61 +1,46 @@
-# MoPub Mediation Android
+Adcash MoPub Mediation Adapter is designed to integrate Adcash SDK with MoPub Mediation to maximize your App fill rate and revenue.  
 
-This SDK is designed for integrating Adcash with MoPub Mediation on Android to maximize fill rate and revenue.  
-
-It's a simple 3-step integration process.
+It's a simple 2-step integration process.
 
 ## Integration Guide
 
-> Assuming integration is already done with MoPub SDK, if not please follow MoPub Integration guideline. (https://dev.twitter.com/mopub/android/getting-started) 
+> Assuming integration is already done with MoPub SDK, if not please follow [MoPub Integration guideline](https://github.com/mopub/mopub-android-sdk/wiki/Getting-Started).  
 
-**Prerequisite:** Android Studio 1.0 or higher 
+### 1. Integrate Adcash SDK
 
-### 1. Download the Adcash SDK
+* **ZONE ID(s)**. You create at [Adcash website](https://www.adcash.com/console/scripts.php).
+* Android Studio 1.0 or higher. Instructions to [install Android Studio](https://developer.android.com/studio/install.html).
+* Android API level 9 or higher
 
-The Adcash SDK is available via:
+#### 1. Add Dependencies
 
-#### 1. Integration with JCenter repository (Recommended)
+##### JCenter repository
 
-The Adcash SDK is uploaded to **JCenter** for your convenience. So you should setup your project to sync to the JCenter repository to allow it to download the Adcash SDK from there.  
+Add **JCenter** repository if you havn't added it yet. Adcash SDK also requires **Google Play Services** and **Android Support Library v4** 
 In your project base `build.gradle` file add:
 
-```xml
+```groovy
 repositories {
     jcenter()
 }
-```
-<a href="http://developer.adca.sh/wp-content/uploads/2015/12/integration_with_gradle_start.png"><img src="http://developer.adca.sh/wp-content/uploads/2015/12/integration_with_gradle_start-300x188.png" alt="integration_with_gradle_start" width="300" height="188" class="aligncenter size-medium wp-image-835" /></a>
 
-When you sync you should now have successfully prepared your project to download from JCenter.  
-
-
-Then simply include the **Adcash SDK** to your project dependencies. Make sure to also include the two library dependencies used and needed by the Adcash SDK - **Google Play Services** and **Android Support Library v4**.  
-Add the following lines to your module based `build.gradle` file:
-
-```xml
 dependencies {
     // Integrate Adcash SDK:
-    compile 'com.adcash:adcash-mopub-adapter:2.2.1'
+    compile 'com.adcash:adcash-mopub-adapter:2.2.2'
 
     // Required by Adcash SDK:
     compile 'com.android.support:support-v4:24.2.0'
     compile 'com.google.android.gms:play-services:9.4.0'
 }
 ```
+![alt tag](http://developer.adca.sh/wp-content/uploads/2016/09/AndroidSDK-MoPub-Adapter-Gradle-Script.png)
+##### Local library file
+If you prefer to use local file instead of Jcenter repository, you can also do it.  
 
-<a href="http://developer.adca.sh/wp-content/uploads/2015/12/integration_with_gradle.png"><img src="http://developer.adca.sh/wp-content/uploads/2015/12/integration_with_gradle-300x188.png" alt="integration_with_gradle" width="300" height="188" class="aligncenter size-medium wp-image-833" /></a>
-
-You may see a warning message across the top of the Android Studio window indicating that Gradle needs to perform a Gradle sync.    
-If that is the case, click **Sync Now** and Gradle will refresh your project libraries to include the dependencies you just added. You should now have successfully integrated the Adcash SDK into your project.  
-At last, go to **Finalize Integration** to make your newly integrated Adcash SDK ready to work with.
-#### 2. Integration with local file
-
-Download the Adcash SDK [here](http://developer.adca.sh/wp-content/uploads/2016/09/adcash-mopub-adapter.zip).
-Add Adcash SDK into project by putting it in **'libs'** module.  If you don't have 'libs' folder in your project module then create one (Example: ... MyNewProject/app/libs/)
-
+First, download the [MoPub adapter](https://github.com/adcash/Adcash-MoPub-Adapter-Android/archive/master.zip). Then create a `libs` folder (if you do not already have one) in your project (Example: ... MyApplication/app/libs/) then add the previously downloaded .AAR file
 Open the build.gradle of your app and add the following code lines:
 
-```xml
+```groovy
 repositories {
     flatDir {
        dirs 'libs'
@@ -67,56 +52,73 @@ dependencies {
     compile(name: 'adcash-mopub-adapter', ext: 'aar')
 
     // Required by Adcash SDK:
-    compile 'com.android.support:support-v4:24.2.+'
-    compile 'com.google.android.gms:play-services-ads:9.2.+'
+    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.google.android.gms:play-services-ads:9.2.0'
 }
 ```
-<a href="http://developer.adca.sh/wp-content/uploads/2016/09/gradle_sync.png"><img src="http://developer.adca.sh/wp-content/uploads/2016/09/gradle_sync-300x207.png" alt="gradle_sync" width="300" height="207" class="aligncenter size-medium wp-image-1102" /></a>
-### 2. Update AndroidManifest.xml
+![alt tag](http://developer.adca.sh/wp-content/uploads/2016/09/AndroidSDK-MoPub-Adapter-Gradle-Script-local.png)
+
+  
+Click **Sync Now** or request Gradle sync yourself if you have not been promoted automatically. Wait till Gradle finishes.
+
+##### (Optional) Proguard settings
+
+If you want to enable **Proguard** in your project, add following line to your  `proguard.cfg` file:
+
+> -keep class com.adcash.mobileads.** { *; }
+
+#### 2. Update Manifest
+
+At this point you have added all necessary dependencies to your project and need small modifications to your module `AndroidManifest.xml` file to finish with the integration.
+
+1. Add the following `<uses-permission>` tags: 
+    * `INTERNET` - required to allow the Adcash SDK to make ad requests.
+    * `ACCESS_NETWORK_STATE` - used to check the Network connection availability.  
+
 ```xml
-
-    <!-- Include required permissions for Adcash SDK to run -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    
-    <application ...>
-    ...
-
-        <!-- Include the AdcashActivity -->
-        <activity
-            android:name="com.adcash.mobileads.ui.AdcashActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" 
-            android:theme="@android:style/Theme.Translucent"
-            android:hardwareAccelerated="true" />
-            
-   <application>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 ```
-### 3. Configure Adcash Custom Event on MoPub Mediation Portal
 
-##### 3.1. Add a Network
-On MoPub Dashboard, click on **Networks tab** then click on **Add a Network** button. 
 
-<a href="http://developer.adca.sh/wp-content/uploads/2016/09/ScreenShot2.png"><img src="http://developer.adca.sh/wp-content/uploads/2016/09/ScreenShot2-300x26.png" alt="ScreenShot2" width="300" height="26" class="aligncenter size-medium wp-image-1131" /></a>
+2. Add **AdcashActivity** for full screen ads to work (interstitial and rewarded video)  
+
+```xml
+    <activity
+        android:name="com.adcash.mobileads.ui.AdcashActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.Translucent" />
+```
+![alt tag](http://developer.adca.sh/wp-content/uploads/2016/09/AndroidSDK-MoPub-Adapter-Manifest-File.png)
+
+### 2. Configure MoPub Custom Event on Mediation Portal
+
+##### 2.1. Add a Network
+
+On MoPub Dashboard, click on **Networks tab** then click on **Add a Network** button.
+![alt tag](http://developer.adca.sh/wp-content/uploads/2016/09/ScreenShot2.png)
 
 On the **Add a Network** page select **Custom Native Network** under **Additional Networks** section.
+![alt tag](http://developer.adca.sh/wp-content/uploads/2016/09/ScreenShot3.png)
 
-<a href="http://developer.adca.sh/wp-content/uploads/2016/09/ScreenShot3.png"><img src="http://developer.adca.sh/wp-content/uploads/2016/09/ScreenShot3-273x300.png" alt="ScreenShot3" width="273" height="300" class="aligncenter size-medium wp-image-1127" /></a>
+##### 2.2. Configure Custom Native Ad Network
 
-##### 3.2. Configure Custom Native Ad Network
+Give it a title **Adcash**, then scroll down for ad units (Adcash MoPub Android Adapter currently supports Banner and Interstitial ad format)   
 
-Give it a title **Adcash**, then scroll down for ad units (Adcash MoPub Android Adapter currently supports Banner and Interstitial ad format)
-Custom Event Information from:  
+Custom Event Information:  
 >	**Custom Event Class:**  
    	_For Banner:_ com.adcash.mobileads.mopubadapter.AdcashMoPubBanner  
-	_For Interstitial:_ com.adcash.mobileads.mopubadapter.AdcashMoPubInterstitial   
+	_For Interstitial:_ com.adcash.mobileads.mopubadapter.AdcashMoPubInterstitial 
+        _For Rewarded Video:_ com.adcash.mobileads.mopubadapter.AdcashMoPubRewarded
 >	**Custom Event Class Data:**  
 >	Enter your Zone ID from Adcash Publisher Panel. It has to be in JSON format with parametr name "adZoneID"
->	Example: {"adZoneID": "your_zone_id"}  
+>	Example: {"adZoneID": "your_zone_id"}   
 
-<a href="http://developer.adca.sh/wp-content/uploads/2016/09/ScreenShot4.png"><img src="http://developer.adca.sh/wp-content/uploads/2016/09/ScreenShot4-300x106.png" alt="ScreenShot4" width="300" height="106" class="aligncenter size-medium wp-image-1128" /></a>
+![alt tag](http://developer.adca.sh/wp-content/uploads/2016/09/ScreenShot4.png)
 
 ## Release App
-Now Adcash is successfully has integrated with MoPub Mediation platform and you can release out the app in PlayStore. Please note changes made in MoPub Portal might take couple of hours to reflect.
+Now Adcash MoPub Mediation Adapter is successfully integrated with MoPub Mediation platform and you can release out the app in PlayStore. Please note changes made in MoPub Mediation Portal might take couple of hours to reflect.
 
 ## Support
-If you need any help or assistance you can contact us by sending email to <strong>mobile@adcash.com</strong>
+If you need any help or assistance you can contact us by sending email to **mobile@adcash.com**
